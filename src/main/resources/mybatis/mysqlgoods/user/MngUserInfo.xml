@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  mapper 配置文件 -->
+<mapper namespace="UserEntity">
+    <resultMap id="usermap" type="user">
+        <result property="id" column="id" />
+        <result property="code" column="user_code" />
+        <result property="name" column="user_name" />
+        <result property="age" column="user_age" />
+        <result property="phone" column="user_phone" />
+        <result property="email" column="user_email" />
+        <result property="birth" column="user_birth" />
+    </resultMap>
+    <select id="find" resultMap="usermap" parameterType="map">
+        select * from dm_goods_user;
+    </select>
+</mapper>

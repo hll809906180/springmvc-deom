@@ -1,0 +1,109 @@
+<insert
+      <!-- 1. id （必须配置）
+        id是命名空间中的唯一标识符，可被用来代表这条语句。
+        一个命名空间（namespace） 对应一个dao接口,
+        这个id也应该对应dao里面的某个方法（相当于方法的实现），因此id 应该与方法名一致 -->
+
+      id="addUser"
+
+      <!-- 2. parameterType （可选配置, 默认为mybatis自动选择处理）
+        将要传入语句的参数的完全限定类名或别名， 如果不配置，mybatis会通过ParameterHandler 根据参数类型默认选择合适的typeHandler进行处理
+        parameterType 主要指定参数类型，可以是int, short, long, string等类型，也可以是复杂类型（如对象） -->
+
+      parameterType="user"
+
+      <!-- 3. flushCache （可选配置，默认配置为true）
+        将其设置为 true，任何时候只要语句被调用，都会导致本地缓存和二级缓存都会被清空，默认值：true（对应插入、更新和删除语句） -->
+
+      flushCache="true"
+
+      <!-- 4. statementType （可选配置，默认配置为PREPARED）
+        STATEMENT，PREPARED 或 CALLABLE 的一个。这会让 MyBatis 分别使用 Statement，PreparedStatement 或 CallableStatement，默认值：PREPARED。 -->
+
+      statementType="PREPARED"
+
+      <!-- 5. keyProperty (可选配置， 默认为unset)
+        （仅对 insert 和 update 有用）唯一标记一个属性，MyBatis 会通过 getGeneratedKeys 的返回值或者通过 insert 语句的 selectKey 子元素设置它的键值，默认：unset。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。 -->
+
+      keyProperty=""
+
+      <!-- 6. keyColumn     (可选配置)
+        （仅对 insert 和 update 有用）通过生成的键值设置表中的列名，这个设置仅在某些数据库（像 PostgreSQL）是必须的，当主键列不是表中的第一列的时候需要设置。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。 -->
+
+      keyColumn=""
+
+      <!-- 7. useGeneratedKeys (可选配置， 默认为false)
+        （仅对 insert 和 update 有用）这会令 MyBatis 使用 JDBC 的 getGeneratedKeys 方法来取出由数据库内部生成的主键（比如：像 MySQL 和 SQL Server 这样的关系数据库管理系统的自动递增字段），默认值：false。  -->
+
+      useGeneratedKeys="false"
+
+      <!-- 8. timeout  (可选配置， 默认为unset, 依赖驱动)
+        这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为 unset（依赖驱动）。 -->
+      timeout="20" >
+	   <!--
+		   将插入的主键返回到user对象中（这里用的是自增主键MySQL数据库）
+		   SELECT LAST_INSERT_ID():得到将insert进去的记录的主键值，只适用与自增主键
+		   keyProperty：将查询到的主键设置到parameterType指定的对象的哪个属性
+		   order：SQL语句执行的顺序，BEFORE或AFTER
+	   -->
+	   <selectKey keyProperty="id" order="AFTER" resultType="int">
+		   SELECT LAST_INSERT_ID()
+	   </selectKey>
+	   INSERT INTO USER(USERNAME,SEX,BIRTHDAY,ADDRESS) VALUES(#{username},#{sex},#{birthday},#{address})
+</insert>
+
+
+在insert时，如果数据库的主键不能自增，可以使用下面的配置来实现相同的功能
+<insert id="insertUser" parameterType="com.dy.entity.User">
+         <!-- 可根据其id生成策略，先获取id，在进行插入 -->
+       <selectKey keyProperty="id" order="BEFORE" resultType="int">
+             select SEQ_USER_ID.nextval as id from dual
+       </selectKey>
+          INSERT INTO USER(ID,USERNAME,SEX,BIRTHDAY,ADDRESS) VALUES(#{id},#{username},#{sex},#{birthday},#{address})
+</insert>
+
+<select
+	<!--  1. id （必须配置）
+	       id是命名空间中的唯一标识符，可被用来代表这条语句。
+	       一个命名空间（namespace） 对应一个dao接口,
+	       这个id也应该对应dao里面的某个方法（相当于方法的实现），因此id 应该与方法名一致  -->
+    id="findUserById"
+
+    <!-- 2. parameterType （可选配置, 默认为mybatis自动选择处理）
+       将要传入语句的参数的完全限定类名或别名， 如果不配置，mybatis会通过ParameterHandler 根据参数类型默认选择合适的typeHandler进行处理
+       parameterType 主要指定参数类型，可以是int, short, long, string等类型，也可以是复杂类型（如对象） -->
+    parameterType="int"
+
+    <!-- 3. resultType (resultType 与 resultMap 二选一配置)
+        resultType用以指定返回类型，指定的类型可以是基本类型，可以是java容器，也可以是javabean -->
+    resultType="user"
+
+    <!-- 4. resultMap (resultType 与 resultMap 二选一配置)
+        resultMap用于引用我们通过 resultMap标签定义的映射类型，这也是mybatis组件高级复杂映射的关键 -->
+    resultMap="userResultMap"
+
+    <!-- 5. flushCache (可选配置)
+        将其设置为 true，任何时候只要语句被调用，都会导致本地缓存和二级缓存都会被清空，默认值：false -->
+    flushCache="false"
+
+    <!-- 6. useCache (可选配置)
+        将其设置为 true，将会导致本条语句的结果被二级缓存，默认值：对 select 元素为 true -->
+    useCache="true"
+
+    <!-- 7. timeout (可选配置)
+        这个设置是在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为 unset（依赖驱动）-->
+    timeout="10000"
+
+    <!-- 8. fetchSize (可选配置)
+        这是尝试影响驱动程序每次批量返回的结果行数和这个设置值相等。默认值为 unset（依赖驱动)-->
+    fetchSize="256"
+
+    <!-- 9. statementType (可选配置)
+        STATEMENT，PREPARED 或 CALLABLE 的一个。这会让 MyBatis 分别使用 Statement，PreparedStatement 或 CallableStatement，默认值：PREPARED-->
+    statementType="PREPARED"
+
+    <!-- 10. resultSetType (可选配置)
+        FORWARD_ONLY，SCROLL_SENSITIVE 或 SCROLL_INSENSITIVE 中的一个，默认值为 unset （依赖驱动）-->
+    resultSetType="FORWARD_ONLY">
+	SELECT * FROM USER WHERE ID = #{id}
+</select>
