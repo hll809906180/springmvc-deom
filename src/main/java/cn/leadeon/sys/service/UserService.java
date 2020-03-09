@@ -15,7 +15,7 @@ public class UserService {
     private UserDao userDao;
 
     public List<UserEntity> getUser(Map params){
-        userDao.choseSqlClient("sqlSessionFactory1");
+      //  userDao.choseSqlClient("sqlSessionFactory1");
         return  userDao.findList(params);
     }
 }

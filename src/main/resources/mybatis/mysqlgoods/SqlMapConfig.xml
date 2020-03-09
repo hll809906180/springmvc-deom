@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <!-- 配置用于控制台输出sql日志。低版本的mybatis不支持logImpl -->
     <settings>
             <setting name="logImpl" value="LOG4J2" />
     </settings>
