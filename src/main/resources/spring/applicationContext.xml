@@ -52,6 +52,15 @@
     <!--</property>-->
     <!--</bean>-->
 
+    <bean class="cn.leadeon.comm.PropertyPlaceholder">
+        <property name="locations">
+            <list>
+                <value>classpath:dev/jdbcConf.properties</value>
+            </list>
+        </property>
+    </bean>
     <!-- 引入mysql 配置 -->
     <import resource="spring-db-mybits.xml"/>
+
+    <import resource="spring-redis.xml"/>
 </beans>
