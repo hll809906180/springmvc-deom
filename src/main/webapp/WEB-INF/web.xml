@@ -15,7 +15,7 @@
     <param-value>60000</param-value>
   </context-param>
   <listener>
-    <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
   </listener>
 
   <!--配置springmvc的分发器-->
